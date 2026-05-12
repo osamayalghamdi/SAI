@@ -11,6 +11,7 @@ services:
     image: ${OLLAMA_IMAGE:-ollama/ollama:latest}
     environment:
       - OLLAMA_KEEP_ALIVE=24h
+      - OLLAMA_HOST=0.0.0.0:11434
     ports:
       - "11434:11434"
     volumes:
@@ -18,13 +19,13 @@ services:
     networks:
       - anything-llm
     restart: unless-stopped
-    # Pull the model at startup (change OLLAMA_MODEL in .env to swap)
+    entrypoint: /bin/sh
     command: >
-      sh -c "ollama serve &
-             sleep 3 &&
-             ollama pull ${OLLAMA_MODEL:-gemma4:latest} &&
-             ollama pull ${EMBEDDING_MODEL_PREF:-nomic-embed-text:latest} &&
-             wait"
+      -c "ollama serve &
+          sleep 5 &&
+          ollama pull ${OLLAMA_MODEL:-command-r7b} &&
+          ollama pull ${EMBEDDING_MODEL_PREF:-nomic-embed-text:latest} &&
+          tail -f /dev/null"
 
   # ── AnythingLLM ──
   anything-llm:

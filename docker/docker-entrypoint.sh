@@ -22,6 +22,7 @@ fi
     export CHECKPOINT_DISABLE=1 &&
     npx prisma generate --schema=./prisma/schema.prisma &&
     npx prisma migrate deploy --schema=./prisma/schema.prisma &&
+    node /app/server/scripts/seed-model.js &&
     node /app/server/index.js
 } &
 { node /app/collector/index.js; } &
